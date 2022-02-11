@@ -20,4 +20,7 @@ export GOMP4_SERVER_PORT=30080
 - [ ] html layout
 
 ## Ref:
-https://stackoverflow.com/questions/67079636/rendering-templates-in-a-go-fiber-application
+[fiber file streaming](https://github.com/gofiber/fiber/issues/253)
+[templete range](https://stackoverflow.com/questions/67079636/rendering-templates-in-a-go-fiber-application)
+[django templete](https://github.com/gofiber/template/tree/master/django)
+[django templete tag](https://github.com/flosch/pongo2#tags)
