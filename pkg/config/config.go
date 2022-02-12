@@ -20,9 +20,15 @@ func setDefaults() {
 
 func init() {
 	setDefaults()
+	// viper.AddConfigPath(".")
+	// viper.SetConfigFile(".env")
 	viper.AutomaticEnv()        // read in environment variables that match
 	viper.SetEnvPrefix("gomp4") // will be uppercased automatically
+
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-	fmt.Println(viper.AllSettings())
-	// fmt.Println("xxx", viper.GetString("LOG.LEVEL"))
+
+	fmt.Println(viper.AllKeys())
+
+	fmt.Println("video dir", viper.GetString("VIDEO.DIR"))
+	fmt.Println("port", viper.GetString("SERVER.PORT"))
 }
