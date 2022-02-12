@@ -8,8 +8,12 @@ docker buildx inspect arm64_buildkit --bootstrap
 docker buildx use arm64_buildkit
 
 docker buildx build --push --platform linux/arm/v6 -f dockerfile -t doublehub/go-mp4-server .
+```
 
-doublehub/go-mp4-server
+## Run
+
+```
+docker run --rm -p 30000:3000 -v /media/pi/ADATA\ HM900/my_record/:/videos -e GOMP4_VIDEO_DIR=/videos doublehub/go-mp4-server
 ```
 
 ## run on pi3
@@ -33,7 +37,7 @@ export GOMP4_SERVER_PORT=30080
 - [ ] html layout
 
 ## Ref:
-[fiber file streaming](https://github.com/gofiber/fiber/issues/253)
-[templete range](https://stackoverflow.com/questions/67079636/rendering-templates-in-a-go-fiber-application)
-[django templete](https://github.com/gofiber/template/tree/master/django)
-[django templete tag](https://github.com/flosch/pongo2#tags)
+- [fiber file streaming](https://github.com/gofiber/fiber/issues/253)
+- [templete range](https://stackoverflow.com/questions/67079636/rendering-templates-in-a-go-fiber-application)
+- [django templete](https://github.com/gofiber/template/tree/master/django)
+- [django templete tag](https://github.com/flosch/pongo2#tags)
