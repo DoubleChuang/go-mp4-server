@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	_ "go-mp4-server/pkg/config"
 	"io/ioutil"
+	"log"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -72,7 +72,7 @@ func main() {
 		if len(videos) <= 0 {
 			return fiber.NewError(fiber.StatusBadRequest, "no such mp4 file in ", viper.GetString("VIDEO.DIR"))
 		}
-		fmt.Println("video:", videos)
+		log.Println("video:", videos)
 		// Render with and extends
 		return c.Render("index", fiber.Map{
 			"Title":  "go-mp4-server",
@@ -95,7 +95,7 @@ func main() {
 				return fiber.NewError(fiber.StatusBadRequest, "idx is out of range")
 			}
 
-			fmt.Println("videos[", idx, "]:", videos[idx])
+			log.Println("videos[", idx, "]:", videos[idx])
 			// Render with and extends
 			return c.Render("index", fiber.Map{
 				"Title":  "go-mp4-server",
