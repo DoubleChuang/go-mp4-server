@@ -1,5 +1,18 @@
-## 
-run on pi3
+## docker build
+
+
+```
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+docker buildx create --name arm64_buildkit --platform linux/arm64
+docker buildx inspect arm64_buildkit --bootstrap
+docker buildx use arm64_buildkit
+
+docker buildx build --push --platform linux/arm/v6 -f dockerfile -t doublehub/go-mp4-server .
+
+doublehub/go-mp4-server
+```
+
+## run on pi3
 ```
 # copy  the views directory to the directory that place the binary
 
