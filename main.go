@@ -58,6 +58,7 @@ func main() {
 		},
 	)
 
+	app.Static("/static", "./static")
 	app.Static("/videos", viper.GetString("VIDEO.DIR"),
 		// https://github.com/gofiber/fiber/issues/253
 		fiber.Static{

@@ -1,25 +1,32 @@
-
 {% include "partials/header.html" %}
 
 <body>
 
-<!-- video -->
-<h1>{{ Src }}</h1>
-<video width="1280" height="720" controls>
-  <source src={{ Src }} type="video/mp4">
-  <!-- <source src="movie.ogg" type="video/ogg"> -->
-  您的瀏覽器不支援video tag
-</video>
+  <div class="container">
+    <!-- Video Player Section -->
+    <section id="video-player">
+      <h1 class="video-title">{{ Title }}</h1>
+      <div class="video-wrapper">
+        <video id="video-player" controls>
+          <source src="{{ Src }}" type="video/mp4">
+          您的浏览器不支持 video 标签。
+        </video>
+      </div>
+    </section>
 
-<!-- <video id="my-video" class="video-js" controls preload="auto" width="320" height="240" data-setup='{"controls": true, "autoplay": false, "preload": "metadata"}'>
-  <source src={{ Src }} type="video/mp4">
-</video> -->
+    <!-- Video Playlist Section -->
+    <section id="video-playlist">
+      <h2 class="playlist-title">视频列表</h2>
+      <ul class="playlist">
+        {% for v in Videos %}
+        <li><a href="/video/{{ forloop.Counter0 }}">{{v}}</a></li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
 
-{% for v in Videos %}
-<li> <a href="/video/{{ forloop.Counter0 }}"> {{v}}</a> </li>
-{% endfor %}
-{% include "partials/footer.html" %}
+  {% include "partials/footer.html" %}
+
 </body>
+
 </html>
-
-

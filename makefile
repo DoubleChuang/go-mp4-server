@@ -47,7 +47,7 @@ debug:
 local:
 	@go build -ldflags "-s -w" -o $(BIN_DIR)$(BIN) $(SRC)
 docker:
-	docker build -t trade_line .
+	docker build -t go-mp4-server .
 
 $(DEBUG_BIN):
 	@go build -gcflags "-N -l" -o $(BIN) $(SRC)

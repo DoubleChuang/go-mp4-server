@@ -19,6 +19,7 @@ FROM golang:1.17
 
 COPY --from=builder /app/bin/ /app/
 COPY views/ /app/views/
+COPY static/ /app/static/
 
 WORKDIR /app
 
