@@ -24,7 +24,15 @@
           <span class="disabled-button">Previous</span>
           {% endif %}
 
-          <span class="separator">|</span> <!-- 分隔符 -->
+          <span class="separator">|</span>
+          
+          <!-- Input Field for Video ID -->
+          <div class="center-buttons">
+            <input type="text" id="video-id-input" placeholder="" onclick="selectAllText()" value="{{ current_video_id }}">
+            <!-- <button onclick="jumpToVideo()">Jump</button> -->
+          </div>
+
+          <span class="separator">|</span>
 
           {% if next_video_url %}
           <a href="{{ next_video_url }}" class="next-button">Next</a>

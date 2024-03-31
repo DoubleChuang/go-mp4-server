@@ -77,10 +77,11 @@ func main() {
 		log.Println("video:", videos)
 		// Render with and extends
 		return c.Render("index", fiber.Map{
-			"Title":          "go-mp4-server",
-			"videoSrc":       videos[0],
-			"Videos":         videos,
-			"next_video_url": 1,
+			"Title":            "go-mp4-server",
+			"videoSrc":         videos[0],
+			"Videos":           videos,
+			"next_video_url":   1,
+			"current_video_id": 0,
 		})
 	})
 
@@ -102,9 +103,10 @@ func main() {
 			// Render with and extends
 
 			renderMap := fiber.Map{
-				"Title":    "go-mp4-server",
-				"videoSrc": videos[idx],
-				"Videos":   videos,
+				"Title":            "go-mp4-server",
+				"videoSrc":         videos[idx],
+				"Videos":           videos,
+				"current_video_id": idx,
 			}
 
 			fmt.Println("idx: ", idx)
