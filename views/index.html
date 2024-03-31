@@ -26,10 +26,17 @@
 
           <span class="separator">|</span>
           
-          <!-- Input Field for Video ID -->
-          <div class="center-buttons">
-            <input type="text" id="video-id-input" placeholder="" onclick="selectAllText()" value="{{ current_video_id }}">
-            <!-- <button onclick="jumpToVideo()">Jump</button> -->
+          <!-- Dropdown menu for selecting videos -->
+          <div class="video-dropdown">            
+            <select id="video-select" onchange="changeVideo(this)">
+              {% for v in Videos %}
+                {% if forloop.Counter0 == current_video_id %}
+                <option value="{{ forloop.Counter0 }}" selected>{{ forloop.Counter0 }}</option>
+                {% else %}
+                <option value="{{ forloop.Counter0 }}">{{ forloop.Counter0 }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
           </div>
 
           <span class="separator">|</span>

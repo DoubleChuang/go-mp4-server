@@ -18,4 +18,11 @@ function selectAllText() {
     input.select();
 }
 
+// handle changing the video based on dropdown selection
+function changeVideo(selectElement) {
+    var selectedIdx = selectElement.value;
+    var videoUrl = "/video/" + selectedIdx;
+    window.location.href = videoUrl;
+}
+
 
