@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	_ "go-mp4-server/pkg/config"
 	"io/ioutil"
 	"log"
@@ -76,9 +77,10 @@ func main() {
 		log.Println("video:", videos)
 		// Render with and extends
 		return c.Render("index", fiber.Map{
-			"Title":  "go-mp4-server",
-			"Src":    videos[0],
-			"Videos": videos,
+			"Title":          "go-mp4-server",
+			"videoSrc":       videos[0],
+			"Videos":         videos,
+			"next_video_url": 1,
 		})
 	})
 
@@ -98,11 +100,26 @@ func main() {
 
 			log.Println("videos[", idx, "]:", videos[idx])
 			// Render with and extends
-			return c.Render("index", fiber.Map{
-				"Title":  "go-mp4-server",
-				"Src":    videos[idx],
-				"Videos": videos,
-			})
+
+			renderMap := fiber.Map{
+				"Title":    "go-mp4-server",
+				"videoSrc": videos[idx],
+				"Videos":   videos,
+			}
+
+			fmt.Println("idx: ", idx)
+
+			if idx > 0 {
+				fmt.Println("previous_video_url idx: ", idx)
+				renderMap["previous_video_url"] = strconv.Itoa(idx - 1)
+			}
+
+			if idx < len(videos)-1 {
+				fmt.Println("next_video_url idx: ", idx)
+				renderMap["next_video_url"] = strconv.Itoa(idx + 1)
+			}
+
+			return c.Render("index", renderMap)
 		})
 
 	app.Use(func(c *fiber.Ctx) error {

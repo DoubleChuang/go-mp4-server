@@ -12,6 +12,39 @@ body {
     /* To maintain distance between content and edge of the page */
 }
 
+.disabled-button {
+    color: #ccc;
+    /* Set button text color to gray */
+    cursor: not-allowed;
+    /* Set cursor style to not-allowed */
+    pointer-events: none;
+    /* Disable mouse events */
+}
+
+/* Modified CSS styles */
+.separator {
+    margin: 0 5px;
+    /* Adjust spacing of the separator */
+    color: #777;
+}
+
+.center-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Align buttons and separator vertically */
+}
+
+.navigation-buttons {
+    margin-top: 10px;
+}
+
+.previous-button,
+.next-button {
+    margin: 0 5px;
+    /* Adjust spacing between buttons */
+}
+
 .video-container {
     max-width: 100%;
     max-height: 100%;

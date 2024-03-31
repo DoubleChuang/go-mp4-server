@@ -9,11 +9,30 @@
         <h1 class="video-title">{{ Title }}</h1>
         <div class="video-wrapper">
           <video class="video-player" controls>
-            <source src="{{ Src }}" type="video/mp4">
+            <source src="{{ videoSrc }}" type="video/mp4">
             Your browser does not support the video tag.
           </video>
         </div>
       </section>
+
+      <!-- Previous and Next Buttons -->
+      <div class="navigation-buttons">
+        <div class="center-buttons">
+          {% if previous_video_url %}
+          <a href="{{ previous_video_url }}" class="previous-button">Previous</a>
+          {% else %}
+          <span class="disabled-button">Previous</span>
+          {% endif %}
+
+          <span class="separator">|</span> <!-- 分隔符 -->
+
+          {% if next_video_url %}
+          <a href="{{ next_video_url }}" class="next-button">Next</a>
+          {% else %}
+          <span class="disabled-button">Next</span>
+          {% endif %}
+        </div>
+      </div>
 
       <!-- Video Playlist Section -->
       <section id="video-playlist">
