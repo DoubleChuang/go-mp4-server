@@ -6,7 +6,7 @@
     <div class="video-container">
       <!-- Video Player Section -->
       <section id="video-player">
-        <h1 class="video-title">{{ Title }}</h1>
+        <h1 class="video-title">{{ videoTitle }}</h1>
         <div class="video-wrapper">
           <video class="video-player" controls>
             <source src="{{ videoSrc }}" type="video/mp4">
@@ -18,12 +18,12 @@
       <!-- Previous and Next Buttons -->
       <div class="navigation-buttons">
         <div class="center-buttons">
+          
           {% if previous_video_url %}
           <a href="{{ previous_video_url }}" class="previous-button">Previous</a>
           {% else %}
           <span class="disabled-button">Previous</span>
           {% endif %}
-
           <span class="separator">|</span>
           
           <!-- Dropdown menu for selecting videos -->

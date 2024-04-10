@@ -77,6 +77,7 @@ func (vs *VideoServer) handleRoot(c *fiber.Ctx) error {
 
 	return c.Render("index", fiber.Map{
 		"Title":            "go-mp4-server",
+		"videoTitle":       videos[0],
 		"videoSrc":         videos[0],
 		"Videos":           videos,
 		"next_video_url":   1,
@@ -104,6 +105,7 @@ func (vs *VideoServer) handleVideo(c *fiber.Ctx) error {
 
 	renderMap := fiber.Map{
 		"Title":            "go-mp4-server",
+		"videoTitle":       videos[idx],
 		"videoSrc":         videos[idx],
 		"Videos":           videos,
 		"current_video_id": idx,
