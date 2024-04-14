@@ -2,7 +2,7 @@
 # Stage 1
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FROM golang:1.17 as builder
+FROM golang:1.22.2 as builder
 
 ENV GO111MODULE=on
 
@@ -15,7 +15,7 @@ RUN make local
 # Stage 2 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FROM golang:1.17
+FROM golang:1.22.2
 
 COPY --from=builder /app/bin/ /app/
 COPY views/ /app/views/

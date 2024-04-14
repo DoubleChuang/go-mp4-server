@@ -1,15 +1,17 @@
 package videoserver
 
 import (
+	"embed"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/template/django"
+	"github.com/gofiber/template/django/v3"
 	"github.com/spf13/viper"
 
 	_ "go-mp4-server/pkg/config"
@@ -22,9 +24,9 @@ type VideoServer struct {
 }
 
 // NewVideoServer function is used to create a new instance of the video server
-func NewVideoServer() *VideoServer {
+func NewVideoServer(viewsAsssets embed.FS) *VideoServer {
 	// Initialize Fiber application
-	engine := django.New("./views", ".html")
+	engine := django.NewPathForwardingFileSystem(http.FS(viewsAsssets), "/views", ".django")
 	engine.Reload(true)
 	engine.Debug(true)
 
@@ -142,7 +144,7 @@ func (vs *VideoServer) handleNotFound(ctx *fiber.Ctx) error {
 // getMp4Files method is used to get all MP4 files in the specified directory
 func (vs *VideoServer) getMp4Files(dir string) ([]string, error) {
 	mp4files := []string{}
-	files, err := ioutil.ReadDir(dir)
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		return mp4files, err
 	}

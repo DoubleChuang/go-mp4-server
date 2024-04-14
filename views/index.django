@@ -1,4 +1,4 @@
-{% include "partials/header.html" %}
+{% include "partials/header.django" %}
 
 <body>
 
@@ -61,7 +61,7 @@
     </div>
   </div>
 
-  {% include "partials/footer.html" %}
+  {% include "partials/footer.django" %}
 
 </body>
 

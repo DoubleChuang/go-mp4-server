@@ -1,4 +1,4 @@
-{% include "partials/header.html" %}
+{% include "partials/header.django" %}
 
 <body>
     <h1>404 Page Not Found</h1>
@@ -16,7 +16,7 @@
     </script>
 </body>
 
-{% include "partials/footer.html" %}
+{% include "partials/footer.django" %}
 
 </body>
 
