@@ -3,7 +3,6 @@ package videoserver
 import (
 	"embed"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -60,32 +59,9 @@ func (vs *VideoServer) configureStaticFiles() {
 
 // configureRoutes method is used to configure routes
 func (vs *VideoServer) configureRoutes() {
-	vs.App.Get("/", vs.handleRoot)
+	vs.App.Get("/", vs.handleVideo)
 	vs.App.Get("/video/:idx", vs.handleVideo)
 	vs.App.Use(vs.handleNotFound)
-}
-
-// handleRoot method is used to handle root path requests
-func (vs *VideoServer) handleRoot(c *fiber.Ctx) error {
-	videos, err := vs.getMp4Files(vs.Config.GetString("VIDEO.DIR"))
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-
-	if len(videos) <= 0 {
-		return fiber.NewError(fiber.StatusBadRequest, "no such mp4 file in ", vs.Config.GetString("VIDEO.DIR"))
-	}
-
-	log.Println("video:", videos)
-
-	return c.Render("index", fiber.Map{
-		"Title":            "go-mp4-server",
-		"videoTitle":       videos[0],
-		"videoSrc":         videos[0],
-		"Videos":           videos,
-		"next_video_url":   1,
-		"current_video_id": 0,
-	})
 }
 
 // handleVideo method is used to handle video requests
@@ -95,7 +71,7 @@ func (vs *VideoServer) handleVideo(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	idx, err := strconv.Atoi(c.Params("idx"))
+	idx, err := strconv.Atoi(c.Params("idx", "0"))
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -103,8 +79,6 @@ func (vs *VideoServer) handleVideo(c *fiber.Ctx) error {
 	if idx < 0 || idx > len(videos)-1 {
 		return vs.handleNotFound(c)
 	}
-
-	log.Println("videos[", idx, "]:", videos[idx])
 
 	renderMap := fiber.Map{
 		"Title":            "go-mp4-server",
@@ -119,7 +93,12 @@ func (vs *VideoServer) handleVideo(c *fiber.Ctx) error {
 	}
 
 	if idx < len(videos)-1 {
-		renderMap["next_video_url"] = strconv.Itoa(idx + 1)
+		isVideoPath := strings.HasPrefix(c.Path(), "/video")
+		if isVideoPath {
+			renderMap["next_video_url"] = strconv.Itoa(idx + 1)
+		} else {
+			renderMap["next_video_url"] = "video/" + strconv.Itoa(idx+1)
+		}
 	}
 
 	return c.Render("index", renderMap)
