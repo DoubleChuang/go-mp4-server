@@ -1,6 +1,7 @@
 package videoserver
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"path/filepath"
@@ -98,7 +99,7 @@ func (vs *VideoServer) handleVideo(c *fiber.Ctx) error {
 	}
 
 	if idx < 0 || idx > len(videos)-1 {
-		return fiber.NewError(fiber.StatusBadRequest, "idx is out of range")
+		return vs.handleNotFound(c)
 	}
 
 	log.Println("videos[", idx, "]:", videos[idx])
@@ -123,8 +124,19 @@ func (vs *VideoServer) handleVideo(c *fiber.Ctx) error {
 }
 
 // handleNotFound method is used to handle 404 errors
-func (vs *VideoServer) handleNotFound(c *fiber.Ctx) error {
-	return c.SendStatus(404)
+func (vs *VideoServer) handleNotFound(ctx *fiber.Ctx) error {
+	// Send a 404 status code initially
+	code := fiber.StatusNotFound
+	err := ctx.Status(code).Render(
+		fmt.Sprintf("%d", code), //404.html
+		fiber.Map{})
+
+	if err != nil {
+		// In case the Render html fails
+		return ctx.Status(code).SendString("Internal Server Error")
+	}
+
+	return nil
 }
 
 // getMp4Files method is used to get all MP4 files in the specified directory
