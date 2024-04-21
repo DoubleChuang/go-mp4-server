@@ -20,6 +20,7 @@ FROM golang:1.22.2
 COPY --from=builder /app/bin/ /app/
 COPY views/ /app/views/
 COPY static/ /app/static/
+COPY auth.json /app/auth.json
 
 WORKDIR /app
 

@@ -8,10 +8,14 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"io/ioutil"
+	"encoding/json"
+	
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/django/v3"
 	"github.com/spf13/viper"
+	"github.com/gofiber/fiber/v2/middleware/basicauth"
 
 	_ "go-mp4-server/pkg/config"
 )
@@ -19,15 +23,40 @@ import (
 // VideoServer struct is used to store video server related information and methods
 type VideoServer struct {
 	App    *fiber.App
-	Config *viper.Viper
+	Config *VideoServerCfg
 }
 
+type VideoServerCfg struct {
+	// Engine Config
+	Debug bool
+	Reload bool
+	// Base Auth
+	EnableBaseAuth bool
+	BaseAuthConfigPath string
+	EnvConfig *viper.Viper
+	ViewsAssets embed.FS
+}
+
+type User struct {
+	Name string `json:"name"`
+	Password string `json:"password"`
+}
+
+type Users struct {
+	Users []User `json:"users"`
+}
+
+
 // NewVideoServer function is used to create a new instance of the video server
-func NewVideoServer(viewsAsssets embed.FS) *VideoServer {
+func NewVideoServer(cfg *VideoServerCfg) *VideoServer {
 	// Initialize Fiber application
-	engine := django.NewPathForwardingFileSystem(http.FS(viewsAsssets), "/views", ".django")
-	engine.Reload(true)
-	engine.Debug(true)
+	engine := django.NewPathForwardingFileSystem(
+		http.FS(cfg.ViewsAssets),
+		"/views",
+		".django",
+	)
+	engine.Reload(cfg.Reload)
+	engine.Debug(cfg.Debug)
 
 	app := fiber.New(fiber.Config{
 		Views: engine,
@@ -36,7 +65,7 @@ func NewVideoServer(viewsAsssets embed.FS) *VideoServer {
 	// Create video server instance
 	videoServer := &VideoServer{
 		App:    app,
-		Config: viper.GetViper(),
+		Config: cfg,
 	}
 
 	// Configure static file serving
@@ -49,16 +78,45 @@ func NewVideoServer(viewsAsssets embed.FS) *VideoServer {
 	return videoServer
 }
 
+func (vs *VideoServer) GetConfig(key string) string{
+	return vs.Config.EnvConfig.GetString(key)
+}
+
 // configureStaticFiles method is used to configure static file serving
 func (vs *VideoServer) configureStaticFiles() {
 	vs.App.Static("/static", "./static")
-	vs.App.Static("/videos", vs.Config.GetString("VIDEO.DIR"), fiber.Static{
+	vs.App.Static("/videos", vs.GetConfig("VIDEO.DIR"), fiber.Static{
 		ByteRange: true,
 	})
 }
 
+func (vs *VideoServer) configBaseAuth(){
+	var users Users
+
+	if !vs.Config.EnableBaseAuth{
+		return
+	}
+	absPath, _ := filepath.Abs(vs.Config.BaseAuthConfigPath)
+	authValues, err := ioutil.ReadFile(absPath)
+	UserMap := make(map[string]string)
+	if err != nil {
+		UserMap["default"] = "default"
+	}else{
+		json.Unmarshal([]byte(authValues), &users)
+		for _, user := range users.Users{
+			fmt.Println("user", user)
+			UserMap[user.Name] = user.Password
+		}
+	}
+
+	vs.App.Use(basicauth.New(basicauth.Config{
+		Users: UserMap,
+	}))
+}
+
 // configureRoutes method is used to configure routes
 func (vs *VideoServer) configureRoutes() {
+	vs.configBaseAuth()
 	vs.App.Get("/", vs.handleVideo)
 	vs.App.Get("/video/:idx", vs.handleVideo)
 	vs.App.Use(vs.handleNotFound)
@@ -66,7 +124,7 @@ func (vs *VideoServer) configureRoutes() {
 
 // handleVideo method is used to handle video requests
 func (vs *VideoServer) handleVideo(c *fiber.Ctx) error {
-	videos, err := vs.getMp4Files(vs.Config.GetString("VIDEO.DIR"))
+	videos, err := vs.getMp4Files(vs.GetConfig("VIDEO.DIR"))
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
@@ -140,7 +198,7 @@ func (vs *VideoServer) getMp4Files(dir string) ([]string, error) {
 		} else { // IsFile
 			if !strings.HasPrefix(fileName, ".") &&
 				strings.HasSuffix(fileName, ".mp4") {
-				url := strings.Replace(dir, vs.Config.GetString("VIDEO.DIR"), "/videos", 1)
+				url := strings.Replace(dir, vs.GetConfig("VIDEO.DIR"), "/videos", 1)
 				mp4files = append(mp4files, filepath.Join(url, fileName))
 			}
 		}

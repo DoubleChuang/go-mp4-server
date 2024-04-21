@@ -44,6 +44,8 @@ export GOMP4_VIDEO_DIR=`pwd`/videos
 # Set the port
 export GOMP4_SERVER_PORT=30080
 
+export GOMP4_SERVER_AUTH_CONFIG_PATH=./auth.json
+
 # Execute the binary
 ./bin/go-mp4-server
 ```

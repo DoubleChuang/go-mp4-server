@@ -16,6 +16,7 @@ func setDefaults() {
 	viper.SetDefault("LOG.LEVEL", "normal")
 	viper.SetDefault("SERVER.PORT", "3000")
 	viper.SetDefault("VIDEO.DIR", "") // GOMP4_VIDEO_DIR="/media/pi/ADATA HM900/my_record/"
+	viper.SetDefault("SERVER.AUTH.CONFIG.PATH", "./auth.json") // auth.json"
 }
 
 func init() {
