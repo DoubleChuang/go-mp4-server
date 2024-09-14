@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:  
+  mp4-server:
+    image: doublehub/go-mp4-server
+    volumes:
+      - $PWD/videos:/videos
+    environment:
+      - GOMP4_VIDEO_DIR=/videos
+    ports:
+      - 30000:3000
+    restart: always
+    expose:
+      - "3000"

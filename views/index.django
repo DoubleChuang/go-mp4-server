@@ -3,12 +3,21 @@
 <body>
 
   <div class="container">
+    
     <div class="video-container">
       <!-- Video Player Section -->
+      
       <section id="video-player">
         <h1 class="video-title">{{ videoTitle }}</h1>
-        <div class="video-wrapper">
-          <video class="video-player" controls>
+        <label>
+        <input type="checkbox" id="toggle360" />
+          Enable 360 Mode
+        </label>
+        <p></p>
+        <label for="zoomRange">Zoom:</label>
+        <input type="range" id="zoomRange" min="30" max="150" value="90" step="1">
+        <div class="video-wrapper" id="video-container">
+          <video id="my-video" class="video-js vjs-default-skin" controls preload="auto">
             <source src="{{ videoSrc }}" type="video/mp4">
             Your browser does not support the video tag.
           </video>

@@ -13,17 +13,33 @@ If you encounter an issue with TLS timeouts when compile code on MacOS, click th
 - https://github.com/docker/buildx/issues/350
 - https://stackoverflow.com/questions/61612158/docker-buildx-build-fails-with-tls-handshake-timeout-while-docker-pull-works/61620325#61620325
 
-## Docker Run
+## Parameters
 
+GOMP4_VIDEO_DIR: the mp4 server will get all mp4 file from the directory
+
+## Docker Run
+example:
 ```
 docker run \
     -d \
     --name go-mp4-server \
     --restart always \
     -p 30000:3000 \
-    -v /media/pi/ADATA\ HM900/my_record/:/videos \
+    -v $PWD/videos:/videos \
     -e GOMP4_VIDEO_DIR=/videos \
     doublehub/go-mp4-server
+```
+## Docker Compose
+
+Please follow the [docker-compose.yml](docker-compose.yml) to set the volume and environment
+
+Start service
+```
+docker compose up -d
+```
+Shutdown service
+```
+docker compose down
 ```
 
 ## How to develop
@@ -44,20 +60,21 @@ export GOMP4_VIDEO_DIR=`pwd`/videos
 # Set the port
 export GOMP4_SERVER_PORT=30080
 
+# Set the auth config
 export GOMP4_SERVER_AUTH_CONFIG_PATH=./auth.json
 
 # Execute the binary
 ./bin/go-mp4-server
 ```
 ## TODO:
-- [ ] videojs
-- [ ] github ci build
-- [ ] dockerfile
+- [x] videojs
+- [x] github ci build
+- [x] dockerfile
 - [ ] print log
 - [ ] list all video performance
 - [ ] refactor 
-- [ ] makefiel
-- [ ] html layout
+- [x] makefile
+- [x] html layout
 
 ## Ref:
 - [fiber file streaming](https://github.com/gofiber/fiber/issues/253)
