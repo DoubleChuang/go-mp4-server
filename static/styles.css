@@ -97,3 +97,8 @@ body {
 .social-icons a:hover {
     color: #007bff;
 }
+
+#artplayer-app {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+}
