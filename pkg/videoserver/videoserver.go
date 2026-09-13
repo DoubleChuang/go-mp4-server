@@ -123,6 +123,7 @@ func (vs *VideoServer) handleVideo(c *fiber.Ctx) error {
 
 	renderMap := fiber.Map{
 		"Title":            "go-mp4-server",
+		"ShowNav":          true,
 		"videoTitle":       videos[idx],
 		"videoSrc":         videos[idx],
 		"Videos":           videos,

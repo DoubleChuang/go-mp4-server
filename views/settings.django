@@ -1,0 +1,40 @@
+{% include "partials/header.django" %}
+
+<body>
+  <div class="container">
+    <h2>Settings</h2>
+    {% if Error %}
+    <p class="error">{{ Error }}</p>
+    {% endif %}
+
+    {% if Enabled %}
+    <p>Two-factor authentication (TOTP) is <strong>enabled</strong>.</p>
+    <form method="POST" action="/settings/2fa/disable">
+      <label>Enter your current 6-digit code to disable: <input type="text" name="code" inputmode="numeric" maxlength="6" required></label>
+      <br>
+      <button type="submit">Disable 2FA</button>
+    </form>
+    {% elif PendingSecret %}
+    <p>Scan this QR code with your authenticator app (Google Authenticator, 1Password, ...):</p>
+    <img src="{{ QRDataURI }}" alt="TOTP QR code">
+    <p>Or enter the secret manually: <code>{{ PendingSecret }}</code></p>
+    <form method="POST" action="/settings/2fa/confirm">
+      <label>Enter the 6-digit code to confirm: <input type="text" name="code" inputmode="numeric" maxlength="6" required></label>
+      <br>
+      <button type="submit">Confirm</button>
+    </form>
+    <form method="POST" action="/settings/2fa/cancel">
+      <button type="submit">Cancel</button>
+    </form>
+    {% else %}
+    <p>Two-factor authentication is <strong>disabled</strong>.</p>
+    <form method="POST" action="/settings/2fa/enable">
+      <button type="submit">Enable 2FA</button>
+    </form>
+    {% endif %}
+  </div>
+
+  {% include "partials/footer.django" %}
+</body>
+
+</html>

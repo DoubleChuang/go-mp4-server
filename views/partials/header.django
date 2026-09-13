@@ -12,3 +12,8 @@
     <script src="https://unpkg.com/videojs-vr/dist/videojs-vr.min.js"></script>
 </head>
 <h1> {{ Title }} </h1>
+{% if ShowNav %}
+<nav>
+    <a href="/">Home</a> | <a href="/settings">Settings</a> | <a href="/logout">Logout</a>
+</nav>
+{% endif %}

@@ -1,0 +1,20 @@
+{% include "partials/header.django" %}
+
+<body>
+  <div class="container">
+    <h2>Two-Factor Verification</h2>
+    {% if Error %}
+    <p class="error">{{ Error }}</p>
+    {% endif %}
+    <p>Enter the 6-digit code from your authenticator app.</p>
+    <form method="POST" action="/verify">
+      <label>Code: <input type="text" name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required></label>
+      <br>
+      <button type="submit">Verify</button>
+    </form>
+  </div>
+
+  {% include "partials/footer.django" %}
+</body>
+
+</html>
