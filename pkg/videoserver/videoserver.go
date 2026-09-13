@@ -24,6 +24,7 @@ import (
 type VideoServer struct {
 	App    *fiber.App
 	Config *VideoServerCfg
+	TotpStore *TotpStore
 }
 
 type VideoServerCfg struct {
@@ -70,6 +71,8 @@ func NewVideoServer(cfg *VideoServerCfg) *VideoServer {
 		App:    app,
 		Config: cfg,
 	}
+
+	videoServer.TotpStore = NewTotpStore(cfg.TotpConfigPath)
 
 	// Configure static file serving
 	videoServer.configureStaticFiles()
