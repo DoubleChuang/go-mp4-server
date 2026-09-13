@@ -8,14 +8,11 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"io/ioutil"
-	"encoding/json"
-	
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/django/v3"
 	"github.com/spf13/viper"
-	"github.com/gofiber/fiber/v2/middleware/basicauth"
+	"github.com/gofiber/fiber/v2/middleware/session"
 
 	_ "go-mp4-server/pkg/config"
 )
@@ -25,6 +22,7 @@ type VideoServer struct {
 	App    *fiber.App
 	Config *VideoServerCfg
 	TotpStore *TotpStore
+	SessionStore *session.Store
 }
 
 type VideoServerCfg struct {
@@ -39,15 +37,6 @@ type VideoServerCfg struct {
 	// TOTP Config
 	TotpConfigPath string
 	TotpIssuer string
-}
-
-type User struct {
-	Name string `json:"name"`
-	Password string `json:"password"`
-}
-
-type Users struct {
-	Users []User `json:"users"`
 }
 
 
@@ -74,6 +63,9 @@ func NewVideoServer(cfg *VideoServerCfg) *VideoServer {
 
 	videoServer.TotpStore = NewTotpStore(cfg.TotpConfigPath)
 
+	// Configure auth (session + middleware) before any routes/statics
+	videoServer.configureAuth()
+
 	// Configure static file serving
 	videoServer.configureStaticFiles()
 
@@ -96,33 +88,18 @@ func (vs *VideoServer) configureStaticFiles() {
 	})
 }
 
-func (vs *VideoServer) configBaseAuth(){
-	var users Users
-
-	if !vs.Config.EnableBaseAuth{
-		return
-	}
-	absPath, _ := filepath.Abs(vs.Config.BaseAuthConfigPath)
-	authValues, err := ioutil.ReadFile(absPath)
-	UserMap := make(map[string]string)
-	if err != nil {
-		UserMap["default"] = "default"
-	}else{
-		json.Unmarshal([]byte(authValues), &users)
-		for _, user := range users.Users{
-			fmt.Println("user", user)
-			UserMap[user.Name] = user.Password
-		}
-	}
-
-	vs.App.Use(basicauth.New(basicauth.Config{
-		Users: UserMap,
-	}))
-}
-
 // configureRoutes method is used to configure routes
 func (vs *VideoServer) configureRoutes() {
-	vs.configBaseAuth()
+	vs.App.Get("/login", vs.handleLoginPage)
+	vs.App.Post("/login", vs.handleLogin)
+	vs.App.Get("/verify", vs.handleVerifyPage)
+	vs.App.Post("/verify", vs.handleVerify)
+	vs.App.Get("/logout", vs.handleLogout)
+	vs.App.Get("/settings", vs.handleSettings)
+	vs.App.Post("/settings/2fa/enable", vs.handleEnable2FA)
+	vs.App.Post("/settings/2fa/confirm", vs.handleConfirm2FA)
+	vs.App.Post("/settings/2fa/cancel", vs.handleCancel2FA)
+	vs.App.Post("/settings/2fa/disable", vs.handleDisable2FA)
 	vs.App.Get("/", vs.handleVideo)
 	vs.App.Get("/video/:idx", vs.handleVideo)
 	vs.App.Use(vs.handleNotFound)
