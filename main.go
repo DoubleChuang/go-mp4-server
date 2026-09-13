@@ -22,6 +22,8 @@ func main() {
 		ViewsAssets: viewsAsssets,
 		BaseAuthConfigPath: viper.GetString("SERVER.AUTH.CONFIG.PATH"),
 		EnvConfig: viper.GetViper(),
+		TotpConfigPath: viper.GetString("SERVER.TOTP.CONFIG.PATH"),
+		TotpIssuer:     viper.GetString("SERVER.TOTP.ISSUER"),
 	}
 	videoServer := videoserver.NewVideoServer(&cfg)
 

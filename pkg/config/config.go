@@ -17,6 +17,8 @@ func setDefaults() {
 	viper.SetDefault("SERVER.PORT", "3000")
 	viper.SetDefault("VIDEO.DIR", "") // GOMP4_VIDEO_DIR="/media/pi/ADATA HM900/my_record/"
 	viper.SetDefault("SERVER.AUTH.CONFIG.PATH", "./auth.json") // auth.json"
+	viper.SetDefault("SERVER.TOTP.CONFIG.PATH", "./2fa.json") // 2fa.json
+	viper.SetDefault("SERVER.TOTP.ISSUER", "go-mp4-server")
 }
 
 func init() {

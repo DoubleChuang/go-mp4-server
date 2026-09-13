@@ -35,6 +35,9 @@ type VideoServerCfg struct {
 	BaseAuthConfigPath string
 	EnvConfig *viper.Viper
 	ViewsAssets embed.FS
+	// TOTP Config
+	TotpConfigPath string
+	TotpIssuer string
 }
 
 type User struct {
