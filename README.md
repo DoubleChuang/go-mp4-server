@@ -16,6 +16,9 @@ If you encounter an issue with TLS timeouts when compile code on MacOS, click th
 ## Parameters
 
 GOMP4_VIDEO_DIR: the mp4 server will get all mp4 file from the directory
+GOMP4_SERVER_AUTH_CONFIG_PATH: path to the user config JSON (default ./auth.json)
+GOMP4_SERVER_TOTP_CONFIG_PATH: path to the 2FA enrollment file (default ./2fa.json, gitignored)
+GOMP4_SERVER_TOTP_ISSUER: issuer label shown in authenticator apps (default go-mp4-server)
 
 ## Docker Run
 example:
